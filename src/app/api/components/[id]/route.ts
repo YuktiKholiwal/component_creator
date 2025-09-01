@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server"
-import { db } from "../route" // replace with real DB lookup
+import { fakeDB } from "../route"
 
-export async function GET(_: Request, { params }: { params: Promise<{ id: string }>}) {
-  const { id } = await params
-  const row = db.get(id)
-  if (!row) return new NextResponse("Not found", { status: 404 })
+export async function GET(
+  _req: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params
+  const row = fakeDB[id]
+
+  if (!row) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 })
+  }
+
   return NextResponse.json(row)
 }
